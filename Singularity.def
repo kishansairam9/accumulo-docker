@@ -9,9 +9,6 @@ From: nvidia/cuda:10.2-devel-ubi7
     export ACCUMULO_HOME=/opt/accumulo
     export PATH="$PATH:$ACCUMULO_HOME/bin"
 
-%files
-    properties/ /opt/accumulo/conf/
-
 %post
     APACHE_DIST_URLS=\
         https://www.apache.org/dyn/closer.cgi?action=download&filename= \
@@ -70,3 +67,5 @@ From: nvidia/cuda:10.2-devel-ubi7
         /opt/accumulo/bin/accumulo-util build-native && \
         # The below line is required for Accumulo 2.0 to work with ZK 3.5 & above.  This will not be needed for Accumulo 2.1
         sed -i 's/\${ZOOKEEPER_HOME}\/\*/\${ZOOKEEPER_HOME}\/\*\:\${ZOOKEEPER_HOME}\/lib\/\*/g' /opt/accumulo/conf/accumulo-env.sh
+    
+    git clone https://github.com/kishansairam9/accumulo-docker.git /tmp/accumulo-docker && cp -r /tmp/accumulo-docker/properties/ /opt/accumulo/conf/
