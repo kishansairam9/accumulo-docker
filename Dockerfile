@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:7
+FROM nvidia/cuda:10.2-devel-ubi7
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk
 
-ARG ACCUMULO_VERSION=2.0.0
-ARG HADOOP_VERSION=3.2.1
-ARG ZOOKEEPER_VERSION=3.6.0
+ARG ACCUMULO_VERSION=2.0.1
+ARG HADOOP_VERSION=3.2.2
+ARG ZOOKEEPER_VERSION=3.7.0
 ARG HADOOP_USER_NAME=accumulo
 ARG ACCUMULO_FILE=
 ARG HADOOP_FILE=
