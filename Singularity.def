@@ -10,12 +10,12 @@ From: nvidia/cuda:10.2-devel-ubi7
     export PATH="$PATH:$ACCUMULO_HOME/bin"
 
 %post
-    APACHE_DIST_URLS=\
-        https://www.apache.org/dyn/closer.cgi?action=download&filename= \
+    APACHE_DIST_URLS=(
+        "https://www.apache.org/dyn/closer.cgi?action=download&filename=" \
         # if the version is outdated (or we're grabbing the .asc file), we might have to pull from the dist/archive :/
-        https://www-us.apache.org/dist/ \
-        https://www.apache.org/dist/ \
-        https://archive.apache.org/dist/
+        "https://www-us.apache.org/dist/" \
+        "https://www.apache.org/dist/" \
+        "https://archive.apache.org/dist/")
     ACCUMULO_VERSION=2.0.1
     HADOOP_VERSION=3.2.2
     ZOOKEEPER_VERSION=3.7.0
@@ -27,14 +27,14 @@ From: nvidia/cuda:10.2-devel-ubi7
     export ACCUMULO_HOME=/opt/accumulo
     export PATH="$PATH:$ACCUMULO_HOME/bin"
 
-    yum install -y java-1.8.0-openjdk-devel make gcc-c++ wget && \
+    yum install -y java-1.8.0-openjdk-devel git make gcc-c++ wget && \
         set -eux; \
         download() { \
             local f="$1"; shift; \
             local distFile="$1"; shift; \
             local success=; \
             local distUrl=; \
-            for distUrl in $APACHE_DIST_URLS; do \
+            for distUrl in ${APACHE_DIST_URLS[@]}; do \
             if wget -nv -O "$f" "$distUrl$distFile"; then \
                 success=1; \
                 break; \
@@ -43,21 +43,9 @@ From: nvidia/cuda:10.2-devel-ubi7
             [ -n "$success" ]; \
         }; \
         \
-        if [ -z "$HADOOP_FILE" ]; then \
-            download "hadoop.tar.gz" "hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"; \
-        else \
-            cp "/tmp/$HADOOP_FILE" "hadoop.tar.gz"; \
-        fi; \
-        if [ -z "$ZOOKEEPER_FILE" ]; then \
-            download "zookeeper.tar.gz" "zookeeper/zookeeper-$ZOOKEEPER_VERSION/apache-zookeeper-$ZOOKEEPER_VERSION-bin.tar.gz"; \
-        else \
-            cp "/tmp/$ZOOKEEPER_FILE" "apache-zookeeper.tar.gz"; \
-        fi; \
-        if [ -z "$ACCUMULO_FILE" ]; then \
-            download "accumulo.tar.gz" "accumulo/$ACCUMULO_VERSION/accumulo-$ACCUMULO_VERSION-bin.tar.gz"; \
-        else \
-            cp "/tmp/$ACCUMULO_FILE" "accumulo.tar.gz"; \
-        fi && \
+        download "hadoop.tar.gz" "hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"; \
+        download "zookeeper.tar.gz" "zookeeper/zookeeper-$ZOOKEEPER_VERSION/apache-zookeeper-$ZOOKEEPER_VERSION-bin.tar.gz"; \
+        download "accumulo.tar.gz" "accumulo/$ACCUMULO_VERSION/accumulo-$ACCUMULO_VERSION-bin.tar.gz"; \
         tar xzf accumulo.tar.gz -C /tmp/ && \
         tar xzf hadoop.tar.gz -C /tmp/ && \
         tar xzf zookeeper.tar.gz -C /tmp/ && \
@@ -68,4 +56,4 @@ From: nvidia/cuda:10.2-devel-ubi7
         # The below line is required for Accumulo 2.0 to work with ZK 3.5 & above.  This will not be needed for Accumulo 2.1
         sed -i 's/\${ZOOKEEPER_HOME}\/\*/\${ZOOKEEPER_HOME}\/\*\:\${ZOOKEEPER_HOME}\/lib\/\*/g' /opt/accumulo/conf/accumulo-env.sh
     
-    git clone https://github.com/kishansairam9/accumulo-docker.git /tmp/accumulo-docker && cp -r /tmp/accumulo-docker/properties/ /opt/accumulo/conf/
+    git clone https://github.com/kishansairam9/accumulo-docker.git /tmp/accumulo-docker && cp -r /tmp/accumulo-docker/properties/* /opt/accumulo/conf/
