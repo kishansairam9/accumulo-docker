@@ -36,7 +36,7 @@ ENV APACHE_DIST_URLS \
 
 COPY README.md $ACCUMULO_FILE $HADOOP_FILE $ZOOKEEPER_FILE /tmp/
 
-RUN yum install -y java-1.8.0-openjdk-devel make gcc-c++ wget && \
+RUN yum install -y java-1.8.0-openjdk-devel git hostname make gcc-c++ wget && \
   set -eux; \
   download() { \
     local f="$1"; shift; \

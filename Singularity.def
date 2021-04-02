@@ -27,7 +27,7 @@ From: nvidia/cuda:10.2-devel-ubi7
     export ACCUMULO_HOME=/opt/accumulo
     export PATH="$PATH:$ACCUMULO_HOME/bin"
 
-    yum install -y java-1.8.0-openjdk-devel git make gcc-c++ wget && \
+    yum install -y java-1.8.0-openjdk-devel git make hostname gcc-c++ wget && \
         set -eux; \
         download() { \
             local f="$1"; shift; \
