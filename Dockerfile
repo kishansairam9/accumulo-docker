@@ -82,7 +82,7 @@ ADD properties/ /opt/accumulo/conf/
 ENV HADOOP_HOME /opt/hadoop
 ENV ZOOKEEPER_HOME /opt/zookeeper
 ENV ACCUMULO_HOME /opt/accumulo
-ENV PATH "$PATH:$ACCUMULO_HOME/bin"
+ENV PATH "$PATH:$ACCUMULO_HOME/bin:$HADOOP_HOME/bin:$ZOOKEEPER_HOME/bin"
 
 ENTRYPOINT ["accumulo"]
 CMD ["help"]
